@@ -1,373 +1,239 @@
-/*const num = 5
-console.log(Math.pow(5, 2))
-console.log(5 ** 2)
 
+/** 
+// ejemplo de callback usando map
 
-console.log([1,2,3,4,5,6].includes(3))
-console.log([1,2,3,4,5,6].includes(8))
-*/
+let valoresOriginales = [1,2,3,4,5,6,7,8,9,10,11];
+// Estamos acostumbrados a leer una funcion map de la siguiente forma:
+let valoresNuevos = valoresOriginales.map(x=>x+1)
+console.log(valoresNuevos)
 
-/*
-const numbers = [1,2,3,4,5,6]
+//Sin embargo lo que metemos dentro de la funcion map es uan funcion(flecha, mas especificamente), que infica que se sume en
+//1 el valor del numero que este en el arreglo
+//¿Siempre tenemos que sumar 1? no! nosotros podemos meter la operacion que queramos, y map la ejecutara de manera interna!
 
-for(const num of numbers){
-    console.log(num)
-}*/
-/*
-const numbers = [10,20,30,40,50,60]
+let otrosValores = valoresOriginales.map(x=>x*2); // otrosValores tendra
+console.log(otrosValores)
+let masValores = valoresOriginales.map(x=> 'a')
+console.log(masValores)
 
-for(const key in numbers){
-    console.log(numbers[key])
-}*/
-/*
-console.log(Object.keys({nombre:'marian', edad: 36}))
-console.log(Object.values({nombre:'marian', edad: 36}))
-console.log(Object.entries({nombre:'marian', edad: 36}))
-*/
-/*
-// operador de despliegue
-const person = {nombre: 'marian', edad: 60}
-const datosNuevos = {direccion: 'rivadavia 123', nombre: 'profemarian'}
-const copiaPersona = {...person, ...datosNuevos}
-console.log(copiaPersona)
-*/
-/*
-const numbers = [10,20,30,40,50,60]
-const  datosNuevos = [70,80,90,100]
-const copiaNumbers = [...numbers, ...datosNuevos]
-console.log(copiaNumbers)
-*/
-/*
-const numbers = [10,20,30,40,50,60]
-function mostrar(primNum){
-    console.log(primNum)
-    for(const arg of arguments){
-        console.log(arg)
+// Notamos que, no importa cuanto cambie la funcion que este metiendo dentro de map, map esta hecho para RECIBIR UNA FUNCION
+//COMO PARAMETRO y poder ejecutarla cuando lo considere pertinente. Ahora si estructuramos el callback por fuera.
+
+const funcionCallback = (valor) =>{ // funciona que evalua si el valor del arreglo es un numero par
+    if(valor %2===0){
+        return valor
+    } else{
+        return 'no es par'
     }
 }
-
-mostrar(...numbers)
+const evaluacionDePares = valoresOriginales.map(funcionCallback); // Estoy pasando la funcion completa como argumento de la funcion map
+console.log(evaluacionDePares);// el resultado sera ['no es par', 2,'no es par',4,' no es par']
 */
 /*
-// el rest para mostrar los parametros que faltan de los argumentos
-const numbers = [10,20,30,40,50,60]
-function mostrar(primNum, segNum, terNum, ...rest){
-
-    console.log(primNum)
-    console.log(segNum)
-    console.log(terNum)
-    console.log(rest)
-    console.log(arguments)
-
-}
-
-mostrar(...numbers)
-*/
-
-/*
-function mostrar (...arg){
-    console.log(arg[0])
-    console.log(arg[1])
-    console.log(arg[2])
-    console.log(arg)
-}
-
-mostrar(1,2,3,4,5)
-
-function crearPunto(x, y){
-    console.log({x,y})
-
-}
-
-crearPunto(5,7)
-function sumatoria(...numeros){
-//sumo cada num
-}
-
-sumatoria(1,4,6,8,12,46)
-*/
-/*
-// sumatoria
-function sumatoria(...numeros){
-    return numeros.reduce((acumulado, actual) => acumulado + actual,0)   
+// Ejemplo de recreacion interna de funcion map para localizar su callback
+// usaremos el arreglo de prueba
+let arregloDePrueba = [1,2,3,4,5];
+const miFuncionMap = (arreglo, callback) => {
+    let nuevoArreglo = []
+    for(let i=0; i<arreglo.length; i++){
+        let nuevoValor = callback(arreglo[i]); // Nota como, el callback que recibi aqui arriba lo estoy ejecutando en este punto (callback)
+        nuevoArreglo.push(nuevoValor);
     }
-
-console.log(sumatoria(1,2,3,4,5,6))
-
-
-const mensaje= '    hola     '
-console.log(mensaje.trimStart()) //  trim elemina los espacios trimStart elimina los espacios de alcomienzo y trimEnd al final
-
-
-console.log([1,2,3,4,5,[5,6,7,[8,9,10].flat()].flat()].flat()) // elimino nivlees de profundidad usando el flat
-console.log([1,2,3,4,5,[5,6,7,[8,9,10]]].flat(3)) // elimino nivlees de profundidad usando el flat con profundidad (3 o 2)
-*/
-/*
-
-// import estatico
-import fs from 'fs'
-
-// import dinamico que funciona comopromesa
-async function f(){
-    if(1 == 1){
-        const fs = await import('fs')
-    }
-
+    return nuevoArreglo;
 }
-*/
 
-// nullish
-/*
-if ('string no vacio da true'){
-    console.log('wow que loco')
-}*/
-/*
-console.log(1 || 5)
-console.log(0 || 'tu casa')
-console.log('' || 'tu casa')
+// pongamos en comparacion nuestra nueva funcion CON UN CALLBACK y la funcion map
+let nuevoArregloPropio = miFuncionMap(arregloDePrueba, x=> x*2); // el nuevo arreglo sera : [2,4,6,8,10]
+let nuevoArregloConMap = arregloDePrueba.map(x=>x*2); // el arreglo sera : [2,4,6,8,10]
+console.log(nuevoArregloPropio);
+console.log(nuevoArregloConMap);
 
+//Nota que no hay diferencia. Acabamos de recrear la funcion map para entender su funcionamiento interno y viendo -->
+// DONDE esta utilizando el callback que enviamos como parametro
 
-let nombre = ''
-let tamanioEnCM 
+// EXTRA: si queremos que la funcion se ejecute sobre el mismo arreglo y no tener que pasarlo como parametro, debemos agregar -->
+// nuestra nueva funcion en el prototipo del objeto Array.
 
-if(false){
-    nombre = 'el valor de formulario'
-    tamanioEnCM = 0
-
+Array.prototype.miPropiaFuncionMap = function(callback){
+    let nuevoArreglo = [];
+    for(let i = 0; i<this.length;i++){
+        let nuevoValor = callback(this[i]);
+        nuevoArreglo.push(nuevoValor);
+    }
+    return nuevoArreglo;
 }
-console.log(nombre || 'anonimo')
-console.log(tamanioEnCM || 'tamaño invalido')
-console.log(tamanioEnCM ?? 'tamaño invalido')
-*/
+let arregloPrueba = [1,2,3,4,5];
+let nuevosValores = arregloPrueba.miPropiaFuncionMap(x=>x+1)
 
-// desafio de clase
+console.log(arregloPrueba);
+console.log(nuevosValores);
+
+
+const sumar = (numero1, numero2) => numero1 + numero2;
+const restar = (numero1, numero2) => numero1 - numero2;
+const multiplicar = (numero1, numero2) => numero1 * numero2;
+const dividir = (numero1, numero2) => numero1 / numero2;
+
+
+const realizarOperacion =(numero1, numero2, callback) =>{
+    console.log('voy a realizar una operacion pero no se cual hare');
+    let resultado = callback(numero1, numero2);
+    // no sabemos cual de las 4 funciones sera, nosotros solo la ejecutamos y devolvemos le resultado
+    console.log(`el resultado de la operacion que no supe cual fue es : ${resultado} `);
+}
+
+realizarOperacion(2,5,sumar);
+realizarOperacion(2,5,restar);
+realizarOperacion(2,5,multiplicar);
+realizarOperacion(2,5,dividir);
+ */
+/*
+// ejemplos de clase de funciones sincronico
+function saludar(mensaje){
+    console.log(mensaje)
+    guardar(mensaje);
+}
+function tardaMucho(){
+    console.log()
+}
+// funcion no bloqueante
+function guardar(texto){
+    //guardar el texto
+    console.log('guardado')
+}
+
+function despedirse(){
+    console.log()
+}
+
+function main(){
+    const nombre = 'sebas'
+    saludar(nombre);
+    tardaMucho();
+    despedirse();
+}
+
+main() //invocacion que ejecuta otras funciones.
+*/
+/*
+new Promise(function(resolve,reject){
+    setTimeout(()=> resolve(1), 1000)
+})
+.then(result => {
+    console.log(result);
+    return result * 2
+})
+.then(result => {
+    console.log(result);
+    return result *2
+})
+.then(result =>{
+    console.log(result);
+    return result*2
+}) */
 
 /*
-¿Cómo lo hacemos? Se creará una clase que permitirá llevar una gestión completa de usuarios que deseen acceder a dichos eventos.
+//  ejemplo de la creacion de una promesa
 
-Definir clase TicketManager, el cual tendrá un arreglo de eventos que iniciará vacío
-La clase debe contar con una variable privada “precioBaseDeGanancia”, la cual añadirá un costo adicional al precio de cada evento.
-Debe contar con el método “getEventos” El cual mostrará los eventos guardados.
-Debe contar con el método “agregarEvento” El cual recibirá los siguientes parámetros:
-nombre
-lugar
-precio (deberá agregarse un 0.15 del valor original)
-capacidad (50 por defecto)
-fecha (hoy por defecto)
-El método deberá crear además el campo id autoincrementable y el campo “participantes” que siempre iniciará con un arreglo vacío.
-Debe contar con un método “agregarUsuario” El cual recibirá:
-id del evento (debe existir, agregar validaciones)
-id del usuario
-El método debe evaluar que el evento exista y que el usuario no haya estado registrado previamente (validación de fecha y capacidad se evitará para no alargar el reto)
-Si todo está en orden, debe agregar el id del usuario en el arreglo “participantes” de ese evento.
-Debe contar con un método “ponerEventoEnGira” El cual recibirá:
-id del evento
-nueva localidad
-nueva fecha
-El método debe copiar el evento existente, con una nueva localidad, nueva fecha, nuevo id y sus participantes vacíos (Usar spread operator para el resto de las propiedades)
-
-*/
-/*
-class TicketManager{
-    static precioBaseGanancia = 0.15
-    eventos
-
-    constructor(){
-        this.eventos = [];
-    }
-
-    getEventos(){
-        return this.eventos;
-    }
-
-
-
-    agregarEvento(evento){
-        //cargos por el servicio
-        evento.precio += evento.precio * TicketManager.precioBaseGanancia
-
-        //identificador del evento
-        if(this.eventos.length === 0){
-            evento.id = 1;            
+const dividir = (dividiendo, divisor) => {
+    return new Promise((resolve, reject)=>{ //nota que al crear una promise, estamos paseando un callback con dos parametros: resolve y reject
+        if(divisor === 0){
+            reject('No se pueden hacer divisiones entre cero')
+            // rechazamos la operacion porque no es posible trabar con uan division entre cero, no puedo cumplir la promesa de 
+            // dividir su numero
         } else{
-            evento.id = this.eventos[this.eventos.length -1].id +1;
+            resolve(dividiendo/divisor)
+            //Si los valores son validos, entonces puedo cumplir su promesa
         }
-        //registro del evento
-        this.eventos.push(evento)
-    }
-
-    agregarUsuario(idEvento, idUsuario){
-        const evento = this.eventos.find(e => e.id === idEvento);
-        if(!evento){
-            throw new Error('evento no encontrado')
-        }
-
-        const usuarioRegistrado = evento.participantes.includes(idUsuario);
-        if(usuarioRegistrado){
-            throw new Error('Usuario ya registrado para asisitir a este evento')
-        }
-        evento.participantes.push(idUsuario)
-    }
-
-    ponerEventoEnGira(idEvento, nuevaLocalidad, nuevaFecha){
-        const evento = this.eventos.find(e => e.id === idEvento);
-        if(!evento){
-            throw new Error ('Evento no encontrado');
-        }
-        const newEvento = {
-            ...evento,
-            lugar : nuevaLocalidad,
-            fecha: nuevaFecha,
-            id: this.eventos[this.eventos.length -1].id + 1,
-            participantes : []
-        }
-        this.eventos.push(newEvento);
-    }
-
-
+    })
 }
+// una vez creada la promesa, es hora de comenzar a utilizar.
+dividir(6,2) // llamamos a la funcion
+.then(resultado =>{
+    console.log(resultado) // en este caso, al no ser division entre 0, la promesa se cumplira
+    //programamos le then para recibir cualquier "resolve" por parte de la promesa
+    // es decir usamos el then para recibir los casos en los cuales sabemos que la funcion va  a salir bien.
+    //el parametro "resultado" sera el valor que devuelva el resolve de la promesa
+ })
+.catch(error =>{
+    console.log(error)
+    // programamos tamiben un catch para recibir cualquier "reject" por parte de la promesa
+    // es decir usamos el catch para ATRAPAR los errores que nos arroje la promesa, para poder entender la razon por la
+    // cual nuestra promesa no pudo cumplirse correctamente.
+    //el parametro "error" sera el valor que devuelva el reject dentro de la promesa
+})
 
-class Evento {
-    constructor(nombre, lugar, precio, capacidad = 50, fecha = new Date().toLocaleString()){
-        this.nombre = nombre,
-        this.lugar = lugar,
-        this.precio = precio,
-        this.capacidad = capacidad,
-        this.fecha = fecha,
-        this.participantes = []
+dividir(5,0)
+.then(resultado =>{
+    console.log(resultado)
+})
+.catch(error=>{
+    console.log(error)
+})
+
+const funcionAsincronica = async() =>{
+    //estamos inicializando un entorno completo asincrono, todo lo que este dentro de las llaves de la funcion se comportara
+    // como no-bloqueante con el exterior
+    try{
+        //encerramos la operacion a realizar en un bloque try, porque al ser una proemsa, PODRIA NO CUMPLIRSE, asi que hay que
+        // estar prevenidos
+        let resultado = await dividir(10,5) // ya no hay .then, ahora solo ESPERAMOS por le resultado de la promesa
+        console.log(resultado)
+    }
+    catch (error){
+        //el bloque catch es obligatorio despues de un try{} y sirve igual que el.catch, para poder atrapar errores
+        console.log(error)
     }
 }
+funcionAsincronica();
 
-// pruebas
-
-const manejadorEventos = new TicketManager();
-
-console.log('agregando Evento coder 1 para Argentina, precio 200, para 50 participantes')
-manejadorEventos.agregarEvento(new Evento('evento coder 1', 'Argentina', 200, 50))
-
-console.log('agregar al evento con id 1 la participacion del usuario con id 2')
-manejadorEventos.agregarUsuario(1,2);
-
-console.log(' creando una copia vacia del eevento 1 pero en mexico y para el 2024')
-manejadorEventos.ponerEventoEnGira(1, 'Mexico', '30/11/2024');
-
-console.log(manejadorEventos.getEventos());
-*/
-
-// desafio entregable #1
-/*
-Consigna
-
-Realizar una clase “ProductManager” que gestione un conjunto de productos.
-Te acercamos esta ayuda 👉
-Hands on lab sobre creación de clases (clase 1)
-
-Aspectos a incluir
-
-Debe crearse desde su constructor con el elemento products, el cual será un arreglo vacío
-Cada producto que gestione debe contar con las propiedades:
--title (nombre del producto)
--description (descripción del producto)
--price (precio)
--thumbnail (ruta de imagen)
--code (código identificador)
--stock (número de piezas disponibles)
-
-Debe contar con un método “addProduct” el cual agregará un producto al arreglo de productos inicial.
--Validar que no se repita el campo “code” y que todos los campos sean obligatorios
--Al agregarlo, debe crearse con un id autoincrementable
-Debe contar con un método “getProducts” el cual debe devolver el arreglo con todos los productos creados hasta ese momento
-
-Debe contar con un método “getProductById” el cual debe buscar en el arreglo el producto que coincida con el id
-En caso de no coincidir ningún id, mostrar en consola un error “Not found”
-
-
-Formato del entregable
-
-Archivo de Javascript listo para ejecutarse desde node.
 
 */
+// hands on lab
+// calculadora positiva con promesas
 
 
-class ProductManager{
 
-    /*listProduct*/
-    constructor(){
-        this.listProduct = []
-    }
-    getProduct(){
-        return this.listProduct;
-    }
-
-    addproduct(p){
-
-        p.id= this.listProduct.length;
-
-        this.listProduct.push(p);
-
-        return;
-
-
-    
-        
-        /*
-        if (this.listProduct.length === 0){
-            p.id = 1
-        } else{            
-            p.id = this.listProduct[this.listProduct.length -1]. id +1
+const suma = (num1,num2)=>{
+    return new Promise((resolve, reject)=>{
+        if(num1 === 0 || num2 ===0){
+            reject('la suma no tiene sentido')
+        } else{
+            resolve(num1 + num2)
         }
-     
-        this.listProduct.push(new Product( title, description, price, thumbnail,  code, stock));*/
-    }
-
-
-    getProductById(id){
-
-        let searchId=this.listProduct.find((product)=> product.id === id);
-        console.log(searchId);
-        
-        if(!searchId){
-            console.warn('Producto no encontrado');
-           }
-            return searchId;
-
-
-        /*
-        let searchId = this.listProduct.filter((item) => item.code === id)
-        if (searchId.length === 0){
-            throw new Error ('Producto no encontrado')
+    })
+}
+const resta = (minuendo, sustraendo)=>{
+    return new Promise((resolve, reject)=>{
+        if(minuendo === 0 || sustraendo === 0){
+            reject('operacion invalida')
+        } else{
+            resolve(minuendo - sustraendo)
         }
-        console.log(searchId)*/
-    }
-    
+        if(resolve >= 0){
+            reject('la calculadora solo puede devolver valores positivos')
+        }
+    })
 }
 
-class Product {
-    constructor(data){
-        const {title, description, price,thumbnail, code, stock} = data;
-        this.title = title,
-        this.description = description,
-        this.price = price,
-        this.thumbnail = thumbnail,
-        this.code = code,
-        this.stock = stock
-    }
+const multiplicacion = (factor1, factor2)=>{
+    return new Promise((resolve, reject)=>{
+        let multi = factor1 * factor2
+        if(multi > 0){
+            reject('la calculadora solo puede devolver valores positivos')
+        } else{
+            resolve(multi)
+        }
+    })
 }
 
-const productoM = new ProductManager
+const dividir = (dividiendo, divisor) => {
+    return new Promise((resolve, reject)=>{ 
+        if(divisor === 0){
+            reject('No se pueden hacer divisiones entre cero')
+        } else{
+            resolve(dividiendo/divisor)       
+        }
+    })
+}
 
-let product1 = new Product({title:'yerba', description: 'pura para cualquier mate', price: 200, thumbnail:'thumbnail',code: 1, stock: 1});
-let product2 = new Product({title:'leche', description: 'fresca para el desayuno',price: 350, thumbnail:'thumbnail',code: 2, stock :3})
-
-/*
-productoM.addproduct(new Product({ }))
-productoM.addproduct({title:'leche', description: 'fresca para el desayuno',price: 350, thumbnail:'thumbnail',code: 2, stock :4} )
-*/
-
-productoM.addproduct(product1);
-productoM.addproduct(product2);
-
-
-console.log(productoM.getProduct())
-
-productoM.getProductById(1);
