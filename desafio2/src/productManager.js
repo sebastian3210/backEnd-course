@@ -22,25 +22,39 @@ import fs from 'fs/promises'
 class ProductManager{
     constructor(ruta){
         this.ruta = ruta
-        this.product=[]        
+        this.product             
     }
     async getProducts(){
-        const json = await fs.readFile(ruta, 'utf-8')
-        this.product = JSON.parse(json)
-        return this.product
+        const json = await fs.readFile(this.ruta, 'utf-8')
+        this.product = JSON.parse(json);
+    }
+
+    async mostrarProduct(){
+        await this.getProducts()
+        console.log(this.product)
+    }
+
+    async saveProduct(){
+        const json=JSON.stringify(this.product, null, 2)
+        await fs.writeFile(this.ruta, json)
+    }
+
+    async addproduct(p){
+        await this.getProducts();
+
+        p.id = this.product.length;
+        this.product.push(p);    
+        
+        await this.saveProduct();
         
 
 
     }
-
-    async addproduct(p){
-        p.id = this.product.length;
-        this.product.push(p);        
-        const json=JSON.stringify(this.product, null, 2)
-        await fs.writeFile(this.ruta, json)
-
-    }
     async getProductById(id){
+        await this.getProducts()
+        //const json = await fs.readFile(this.ruta, 'utf-8')
+        //this.product = JSON.parse(json)
+
         let searchId = this.product.find((product)=>product.id === id);
 
         if(!searchId){
@@ -53,7 +67,7 @@ class ProductManager{
     }
 }
 
-class Product{
+class Products{
     constructor(data){
         const{title, description, price, thumbnail, code,stock} = data;
         this.title = title,
@@ -65,10 +79,11 @@ class Product{
     }
 }
 
-const ruta = new ProductManager('../static/product.txt')
+const product = new ProductManager('./static/product.txt')
 
-let product1 = new Product({title:'yerba', description: 'pura para cualquier mate', price: 200, thumbnail:'thumbnail',code: 1, stock: 1});
+let product1 = new Products({title:'yerba', description: 'pura para cualquier mate', price: 200, thumbnail:'thumbnail',code: "abc5466", stock: 1});
 
-await ruta.getProducts()
-await ruta.addproduct(product1);
-await ruta.getProductById()
+await product.mostrarProduct()
+await product.addproduct(product1);
+await product.mostrarProduct()
+await product.getProductById()
