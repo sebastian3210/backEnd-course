@@ -1,0 +1,29 @@
+[
+  {
+    "title": "yerba",
+    "description": "pura para cualquier mate",
+    "price": 200,
+    "thumbnail": "thumbnail",
+    "code": "abc5466",
+    "stock": 1,
+    "id": 0
+  },
+  {
+    "title": "coca-cola",
+    "description": "gas para cualquier momento",
+    "price": 500,
+    "thumbnail": "thumbnail",
+    "code": "abc5468",
+    "stock": 1,
+    "id": 2
+  },
+  {
+    "title": "pepsi",
+    "description": "gas para cualquier momento",
+    "price": 300,
+    "thumbnail": "thumbnail",
+    "code": "abc5469",
+    "stock": 7,
+    "id": 3
+  }
+]

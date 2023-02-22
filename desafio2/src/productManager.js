@@ -17,12 +17,12 @@ Se llamará al método “deleteProduct”, se evaluará que realmente se elimin
 
 import fs from 'fs/promises'
 
-const ruta = "../static/product.txt"
+const ruta = "./desafio2/static/product.json"
 
 class ProductManager{
     constructor(ruta){
         this.ruta = ruta
-        this.product             
+        this.product = []            
     }
     async getProducts(){
         //const json = await fs.readFile(this.ruta, 'utf-8')
@@ -62,10 +62,34 @@ class ProductManager{
         if(!searchId){
             console.warn('Producto no encontrado')
         }
-        return searchId;
+        return await searchId;
     }
-    async deleteProduct(){
-        await fs.rm(this.ruta)
+    async deleteProduct(id){
+        await this.getProducts()
+
+        let searchId = this.product.findIndex((product)=>product.id === id);
+
+        if(!searchId){
+            console.warn('Producto no encontrado')
+        } else{
+            this.product.splice(1, searchId);
+            await this.saveProduct();
+            return console.log('producto eliminado')
+        }
+    }
+    async updateProduct(id){
+        await this.getProducts();
+        let searchId = this.product.findIndex((product)=>product.id === id);
+
+        if(!searchId){
+            console.warn('Producto no encontrado para le update')
+        } else{
+            this.product[searchId] ={...this.product[searchId],...id,stock : 1};
+            await this.saveProduct();
+            return console.log('producto update')
+        }
+
+
     }
 }
 
@@ -81,12 +105,28 @@ class Products{
     }
 }
 
-const listProduct = new ProductManager(ruta)
+
+const manager = new ProductManager(ruta)
 
 let product1 = new Products({title:'yerba', description: 'pura para cualquier mate', price: 200, thumbnail:'thumbnail',code: "abc5466", stock: 1});
+let product2 = new Products({title:'agua', description: 'pura para cualquier momento', price: 400, thumbnail:'thumbnail',code: "abc5467", stock: 3});
+let product3 = new Products({title:'coca-cola', description: 'gas para cualquier momento', price: 500, thumbnail:'thumbnail',code: "abc5468", stock: 10});
+let product4 = new Products({title:'pepsi', description: 'gas para cualquier momento', price: 300, thumbnail:'thumbnail',code: "abc5469", stock: 7});
 
-await listProduct.mostrarProduct()
-.then((res)=> console.log(res))
-await listProduct.addproduct(product1);
-await listProduct.mostrarProduct()
-await listProduct.getProductById()
+manager.getProducts().then((res)=> console.log(res))
+
+await manager.addproduct(product1)
+await manager.addproduct(product2)
+await manager.addproduct(product3)
+await manager.addproduct(product4)
+
+
+manager.getProducts().then((res)=> console.log(res))
+
+await manager.getProductById(0).then((res)=> console.log(res));
+
+await manager.updateProduct(2)
+
+await manager.deleteProduct(1)
+
+
