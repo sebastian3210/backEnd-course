@@ -17,7 +17,7 @@ Se llamará al método “deleteProduct”, se evaluará que realmente se elimin
 
 import fs from 'fs/promises'
 
-//const ruta = "../static/product.txt"
+const ruta = "../static/product.txt"
 
 class ProductManager{
     constructor(ruta){
@@ -25,8 +25,10 @@ class ProductManager{
         this.product             
     }
     async getProducts(){
-        const json = await fs.readFile(this.ruta, 'utf-8')
-        this.product = JSON.parse(json);
+        //const json = await fs.readFile(this.ruta, 'utf-8')
+        const products = await fs.readFile(this.ruta, 'utf-8')
+        //this.product = await JSON.parse(json);
+        return await  JSON.parse(products)
     }
 
     async mostrarProduct(){
@@ -79,11 +81,12 @@ class Products{
     }
 }
 
-const product = new ProductManager('./static/product.txt')
+const listProduct = new ProductManager(ruta)
 
 let product1 = new Products({title:'yerba', description: 'pura para cualquier mate', price: 200, thumbnail:'thumbnail',code: "abc5466", stock: 1});
 
-await product.mostrarProduct()
-await product.addproduct(product1);
-await product.mostrarProduct()
-await product.getProductById()
+await listProduct.mostrarProduct()
+.then((res)=> console.log(res))
+await listProduct.addproduct(product1);
+await listProduct.mostrarProduct()
+await listProduct.getProductById()
