@@ -84,7 +84,7 @@ class ProductManager{
         if(!searchId){
             console.warn('Producto no encontrado para le update')
         } else{
-            this.product[searchId] ={...this.product[searchId],...id,stock : 1};
+            this.product[searchId] ={...this.product[searchId],...id,stock:45};
             await this.saveProduct();
             return console.log('producto update')
         }
